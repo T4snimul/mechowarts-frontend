@@ -34,6 +34,7 @@ import {
   HomeIcon,
   LibraryBig,
   MessageCircle,
+  Notebook,
   Pickaxe,
   Settings2,
   SquareTerminal,
@@ -89,6 +90,11 @@ const data = {
           url: "#",
         },
       ],
+    },
+    {
+      title: "Notes",
+      url: "#",
+      icon: Notebook,
     },
     {
       title: "Chat",
