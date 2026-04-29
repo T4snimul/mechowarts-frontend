@@ -1,0 +1,3 @@
+{
+  "postCreateCommand": "cp .devcontainer/.bashrc ~/.bashrc && source ~/.bashrc"
+}
