@@ -22,7 +22,7 @@ import {
   ClockIcon,
   MapsIcon,
 } from "@hugeicons/core-free-icons";
-import Logo from "@/assets/logo.png";
+import Logo from "@/assets/logo.svg";
 import {
   Calendar,
   HomeIcon,
@@ -184,7 +184,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
                 <a href="#">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary-foreground text-sidebar-primary-foreground">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground">
                     <img src={Logo} alt="Mechowarts" />
                   </div>
                   <div className="flex flex-col gap-0.5 leading-none">
