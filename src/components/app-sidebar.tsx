@@ -83,14 +83,16 @@ const data = {
       ],
     },
     {
-      title: "Notes",
-      url: "#",
-      icon: Notebook,
-    },
-    {
       title: "Chat",
       url: "#",
       icon: MessageCircle,
+    },
+  ],
+  resources: [
+    {
+      title: "Notes",
+      url: "#",
+      icon: Notebook,
     },
     {
       title: "Theories",
@@ -194,7 +196,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={data.navMain} />
+          <NavMain items={data.navMain} label="" />
+          <NavMain items={data.resources} label="Resources" />
           <NavTools tools={data.tools} />
         </SidebarContent>
         <SidebarFooter>
