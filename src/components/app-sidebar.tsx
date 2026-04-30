@@ -20,25 +20,16 @@ import {
   CalculatorIcon,
   FileIcon,
   ClockIcon,
-  Chat,
-  ChatIcon,
-  Books,
   MapsIcon,
-  MachineRobotIcon,
 } from "@hugeicons/core-free-icons";
 import Logo from "@/assets/logo.png";
 import {
-  BookOpen,
-  Bot,
   Calendar,
   HomeIcon,
   LibraryBig,
   MessageCircle,
   Notebook,
   Pickaxe,
-  Settings2,
-  SquareTerminal,
-  User,
   Users,
 } from "lucide-react";
 import { TooltipProvider } from "./ui/tooltip";
