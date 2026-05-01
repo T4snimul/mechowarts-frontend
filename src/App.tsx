@@ -8,52 +8,56 @@ import { Separator } from "./components/ui/separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "./components/ui/breadcrumb";
+import { Outlet } from "react-router";
+import LandingPage from "@/pages/LandingPage";
+import { useState } from "react";
+
+const demoUser = {
+  _id: 1,
+  name: "Tasnimul Hasan",
+  email: "2408020@student.ruet.ac.bd",
+};
 
 function App() {
-  return (
-    <SidebarProvider>
-      <div className="flex w-full min-h-screen">
-        <AppSidebar />
+  const [user, setUser] = useState(null);
 
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator
-                orientation="vertical"
-                className="mr-2 data-[orientation=vertical]:h-4"
-              />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">Theories</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>
-                      CSE 2187: Software Engineering
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-          </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-              <div className="aspect-video rounded-xl bg-muted/50" />
-              <div className="aspect-video rounded-xl bg-muted/50" />
-              <div className="aspect-video rounded-xl bg-muted/50" />
-            </div>
-            <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+  return (
+    <>
+      {user ? (
+        <SidebarProvider>
+          <div className="flex w-full min-h-screen">
+            <AppSidebar />
+
+            <SidebarInset>
+              <header className="sticky top-0 bg-white flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                <div className="flex items-center gap-2 px-4">
+                  <SidebarTrigger className="-ml-1" />
+                  <Separator
+                    orientation="vertical"
+                    className="mr-2 data-[orientation=vertical]:h-4"
+                  />
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      <BreadcrumbItem className="hidden md:block">
+                        <BreadcrumbPage>Home</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </BreadcrumbList>
+                  </Breadcrumb>
+                </div>
+              </header>
+              <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                <Outlet />
+              </div>
+            </SidebarInset>
           </div>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+        </SidebarProvider>
+      ) : (
+        <LandingPage onLogin={() => setUser(demoUser)} />
+      )}
+    </>
   );
 }
 
