@@ -2,7 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Logo from "@/assets/logo.svg";
 
-export default function LandingPage({ onLogin }) {
+type LandingPageProps = {
+  onLogin: () => void;
+};
+
+export default function LandingPage({ onLogin }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-linear-to-b from-background to-muted/40 flex flex-col">
       {/* Header */}

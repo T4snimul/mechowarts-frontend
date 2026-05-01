@@ -15,6 +15,12 @@ import { Outlet } from "react-router";
 import LandingPage from "@/pages/LandingPage";
 import { useState } from "react";
 
+type User = {
+  _id: number;
+  name: string;
+  email: string;
+};
+
 const demoUser = {
   _id: 1,
   name: "Tasnimul Hasan",
@@ -22,7 +28,7 @@ const demoUser = {
 };
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   return (
     <>
