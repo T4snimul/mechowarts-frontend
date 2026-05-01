@@ -3,7 +3,6 @@
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavTools } from "@/components/nav-tools";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -15,21 +14,20 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  CalculatorIcon,
-  FileIcon,
-  ClockIcon,
-  MapsIcon,
-} from "@hugeicons/core-free-icons";
+
+
 import Logo from "@/assets/logo.svg";
 import {
+  Calculator,
   Calendar,
+  Clock,
+  File,
+  FlaskConical,
   HomeIcon,
   LibraryBig,
+  Map,
   MessageCircle,
   Notebook,
-  Pickaxe,
   Users,
 } from "lucide-react";
 import { TooltipProvider } from "./ui/tooltip";
@@ -125,7 +123,7 @@ const data = {
     {
       title: "Sessionals",
       url: "#",
-      icon: Pickaxe,
+      icon: FlaskConical,
       items: [
         {
           title: "CSE 2187: Software Engineering",
@@ -153,24 +151,24 @@ const data = {
   ],
   tools: [
     {
-      name: "Grade Calculator",
+      title: "Grade Calculator",
       url: "#",
-      icon: <HugeiconsIcon icon={CalculatorIcon} strokeWidth={2} />,
+      icon: Calculator,
     },
     {
-      name: "Report Cover Generator",
+      title: "Report Cover Generator",
       url: "#",
-      icon: <HugeiconsIcon icon={FileIcon} strokeWidth={2} />,
+      icon: File,
     },
     {
-      name: "Pomodoro Timer",
+      title: "Pomodoro Timer",
       url: "#",
-      icon: <HugeiconsIcon icon={ClockIcon} strokeWidth={2} />,
+      icon: Clock,
     },
     {
-      name: "Alumni Map",
+      title: "Alumni Map",
       url: "#",
-      icon: <HugeiconsIcon icon={MapsIcon} strokeWidth={2} />,
+      icon: Map,
     },
   ],
 };
@@ -198,7 +196,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <NavMain items={data.navMain} label="" />
           <NavMain items={data.resources} label="Resources" />
-          <NavTools tools={data.tools} />
+          <NavMain items={data.tools} label="Tools" />
         </SidebarContent>
         <SidebarFooter>
           <NavUser user={data.user} />
