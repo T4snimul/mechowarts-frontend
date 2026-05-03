@@ -19,8 +19,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useContext } from "react";
-import { RouteContext } from "@/contexts";
+import { useRoute } from "@/hooks/useRoute";
 
 type FormData = z.infer<typeof otpSchema>;
 
@@ -28,7 +27,7 @@ export default function OtpForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const { handleBack } = useContext(RouteContext);
+  const { handleBack } = useRoute();
 
   const form = useForm<FormData>({
     resolver: zodResolver(otpSchema),

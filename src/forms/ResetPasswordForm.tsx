@@ -14,8 +14,7 @@ import { resetPasswordSchema } from "./schema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
-import { RouteContext } from "@/contexts";
+import { useRoute } from "@/hooks/useRoute";
 
 type FormData = z.infer<typeof resetPasswordSchema>;
 
@@ -23,7 +22,7 @@ export default function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const { handleBack } = useContext(RouteContext);
+  const { handleBack } = useRoute();
 
   const form = useForm<FormData>({
     resolver: zodResolver(resetPasswordSchema),

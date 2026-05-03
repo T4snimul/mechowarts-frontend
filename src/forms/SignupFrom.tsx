@@ -16,8 +16,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "./schema";
 import { z } from "zod";
-import { useContext } from "react";
-import { RouteContext } from "@/contexts";
+import { useRoute } from "@/hooks/useRoute";
 
 type FormData = z.infer<typeof signupSchema>;
 
@@ -25,7 +24,7 @@ export default function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const { handleBack } = useContext(RouteContext);
+  const { handleBack } = useRoute();
 
   const form = useForm<FormData>({
     resolver: zodResolver(signupSchema),

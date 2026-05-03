@@ -6,7 +6,7 @@ export default function RouteProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleBack = (defaultPage) => {
+  const handleBack = (defaultPage: string) => {
     const from = location.state?.from;
     console.log(from);
 
