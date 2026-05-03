@@ -13,7 +13,7 @@ export default function LandingPage() {
           content="Mechowarts is a portfolio of mechatronics engineering projects, robotics builds, and web development experiments by Tanim."
         />
       </Helmet>
-      <div className="min-h-screen bg-linear-to-b from-background to-muted/40 flex flex-col">
+      <div className="selection:bg-primary selection:text-background min-h-screen bg-linear-to-b from-background to-muted/40 flex flex-col">
         <Header />
         <Hero />
         <Footer />

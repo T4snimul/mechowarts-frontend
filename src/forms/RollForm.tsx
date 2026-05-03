@@ -7,16 +7,41 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
 import Logo from "@/assets/logo.svg";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { NavLink } from "react-router-dom";
+import { rollSchema } from "./schema";
 
 export default function RollForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const form = useForm({
+    resolver: zodResolver(rollSchema),
+    defaultValues: {
+      roll: "",
+    },
+  });
+
+  const handleRollSubmit = (formData) => {
+    console.log(formData.roll);
+  };
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      onSubmit={form.handleSubmit(handleRollSubmit)}
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
       <FieldGroup>
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="flex justify-center items-center gap-2 mb-2">
@@ -39,16 +64,47 @@ export default function RollForm({
         <Field>
           <FieldLabel>Roll Number</FieldLabel>
 
-          <div className="flex justify-center gap-2">
-            {Array.from({ length: 7 }).map((_, i) => (
-              <Input
-                key={i}
-                maxLength={1}
-                inputMode="numeric"
-                className="h-12 w-10 text-center text-lg font-mono"
-              />
-            ))}
-          </div>
+          <Controller
+            control={form.control}
+            name="roll"
+            render={({ field }) => (
+              <div className="flex justify-center">
+                <InputOTP
+                  maxLength={7}
+                  id="digits-only"
+                  pattern={REGEXP_ONLY_DIGITS}
+                  value={field.value}
+                  onChange={field.onChange}
+                >
+                  <InputOTPGroup>
+                    <InputOTPSlot className="digit-slot" index={0} />
+                    <InputOTPSlot className="digit-slot" index={1} />
+                  </InputOTPGroup>
+
+                  <InputOTPSeparator />
+
+                  <InputOTPGroup>
+                    <InputOTPSlot className="digit-slot" index={2} />
+                    <InputOTPSlot className="digit-slot" index={3} />
+                  </InputOTPGroup>
+
+                  <InputOTPSeparator />
+
+                  <InputOTPGroup>
+                    <InputOTPSlot className="digit-slot" index={4} />
+                    <InputOTPSlot className="digit-slot" index={5} />
+                    <InputOTPSlot className="digit-slot" index={6} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
+            )}
+          />
+
+          {form.formState.errors.roll && (
+            <FieldDescription>
+              {form.formState.errors.roll.message}
+            </FieldDescription>
+          )}
         </Field>
 
         <Field>
@@ -61,10 +117,12 @@ export default function RollForm({
 
         {/* Back */}
         <Field>
-          <Button variant="outline" type="button" className="w-full">
-            <ArrowLeft />
-            Go back
-          </Button>
+          <NavLink to="/">
+            <Button variant="outline" type="button" className="w-full">
+              <ArrowLeft />
+              Go back
+            </Button>
+          </NavLink>
         </Field>
       </FieldGroup>
     </form>

@@ -131,3 +131,9 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .digit-slot {
+    @apply h-12 w-10 text-center text-lg font-mono;
+  }
+}

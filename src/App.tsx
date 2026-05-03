@@ -17,7 +17,7 @@ function App() {
   return (
     <>
       <SidebarProvider>
-        <div className="flex w-full min-h-screen">
+        <div className="flex w-full min-h-screen selection:bg-primary selection:text-background">
           <AppSidebar />
 
           <SidebarInset>

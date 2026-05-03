@@ -3,21 +3,48 @@ import GoogleLogo from "@/assets/google.svg";
 import { Button } from "@/components/ui/button";
 import {
   Field,
+  FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mars, Venus } from "lucide-react";
 import Logo from "@/assets/logo.svg";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signupSchema } from "./schema";
+import { z } from "zod";
+
+type FormData = z.infer<typeof signupSchema>;
 
 export default function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const form = useForm<FormData>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      gender: undefined,
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const handleSignup = (formData) => {
+    console.log(formData);
+  };
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      onSubmit={form.handleSubmit(handleSignup)}
+      noValidate
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
       <FieldGroup>
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="flex justify-center items-center gap-2 mb-2">
@@ -38,13 +65,13 @@ export default function SignupForm({
             </span>
           </p>
         </div>
-        <div className="grid max-w-sm grid-cols-2 gap-2">
+        <FieldGroup className="grid max-w-sm grid-cols-2 gap-2">
           <Field>
             <FieldLabel htmlFor="firstName">First Name</FieldLabel>
             <Input
               id="firstName"
+              {...form.register("firstName")}
               type="text"
-              required
               className="bg-background"
             />
           </Field>
@@ -52,36 +79,79 @@ export default function SignupForm({
             <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
             <Input
               id="lastName"
+              {...form.register("lastName")}
               type="text"
-              required
               className="bg-background"
             />
           </Field>
-        </div>
+
+          {form.formState.errors.firstName ? (
+            <FieldDescription>
+              {form.formState.errors.firstName.message}
+            </FieldDescription>
+          ) : (
+            form.formState.errors.lastName && (
+              <FieldDescription>
+                {form.formState.errors.lastName.message}
+              </FieldDescription>
+            )
+          )}
+        </FieldGroup>
         <Field>
           <FieldLabel htmlFor="gender">Gender</FieldLabel>
-          <ToggleGroup type="single" className="border grid grid-cols-2">
-            <ToggleGroupItem value="male">Male</ToggleGroupItem>
-            <ToggleGroupItem value="female">Female</ToggleGroupItem>
+          <ToggleGroup
+            type="single"
+            onValueChange={(value) => {
+              if (!value) return;
+              form.setValue("gender", value as "male" | "female", {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+            }}
+            className="border grid grid-cols-2"
+          >
+            <ToggleGroupItem value="male">
+              <Mars />
+              Male
+            </ToggleGroupItem>
+            <ToggleGroupItem value="female">
+              <Venus /> Female
+            </ToggleGroupItem>
           </ToggleGroup>
+
+          {form.formState.errors.gender && (
+            <FieldDescription>
+              {form.formState.errors.gender.message}
+            </FieldDescription>
+          )}
         </Field>
         <Field>
           <FieldLabel htmlFor="password">Password</FieldLabel>
           <Input
             id="password"
+            {...form.register("password")}
             type="password"
-            required
             className="bg-background"
           />
+          {form.formState.errors.password && (
+            <FieldDescription>
+              {form.formState.errors.password.message}
+            </FieldDescription>
+          )}
         </Field>
         <Field>
           <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
           <Input
             id="confirm-password"
+            {...form.register("confirmPassword")}
             type="password"
-            required
             className="bg-background"
           />
+          {form.formState.errors.confirmPassword && (
+            <FieldDescription>
+              {form.formState.errors.confirmPassword.message}
+            </FieldDescription>
+          )}
         </Field>
         <Field>
           <Button type="submit">Create Account</Button>
