@@ -2,12 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Logo from "@/assets/logo.svg";
 import { Helmet } from "react-helmet-async";
+import { Link, NavLink } from "react-router";
 
-type LandingPageProps = {
-  onLogin: () => void;
-};
-
-export default function LandingPage({ onLogin }: LandingPageProps) {
+export default function LandingPage() {
   return (
     <>
       <Helmet>
@@ -29,8 +26,8 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
             <span className="font-semibold tracking-tight">Mechowarts</span>
           </div>
 
-          <Button variant="outline" onClick={onLogin}>
-            Login
+          <Button variant="outline">
+            <NavLink to="/dashboard">Login</NavLink>
           </Button>
         </header>
 
@@ -48,8 +45,8 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
             </p>
 
             <div className="flex gap-3 justify-center">
-              <Button size="lg" onClick={onLogin}>
-                Get Started
+              <Button size="lg">
+                <Link to="/dashboard">Get Started</Link>
               </Button>
               <Button size="lg" variant="outline">
                 Learn More
