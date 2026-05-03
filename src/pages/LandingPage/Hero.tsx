@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Hero() {
   return (
@@ -17,7 +17,7 @@ export default function Hero() {
 
         <div className="flex gap-3 justify-center">
           <Button size="lg">
-            <Link to="/auth">Get Started</Link>
+            <NavLink to="/auth">Get Started</NavLink>
           </Button>
           <Button size="lg" variant="outline">
             Learn More

@@ -1,7 +1,8 @@
 import { RouteContext } from "@/contexts";
 import { useLocation, useNavigate } from "react-router-dom";
+import type { ReactNode } from "react";
 
-export default function RouteProvider({ children }) {
+export default function RouteProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -12,7 +13,7 @@ export default function RouteProvider({ children }) {
     if (from) {
       navigate(from, { replace: true });
     } else {
-      navigate(defaultPage, { replace: true });
+      navigate(defaultPage);
     }
   };
 

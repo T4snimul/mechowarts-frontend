@@ -18,9 +18,10 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useNavigate } from "react-router-dom";
 import { rollSchema } from "./schema";
 import { z } from "zod";
+import { useContext } from "react";
+import { RouteContext } from "@/contexts";
 
 type FormData = z.infer<typeof rollSchema>;
 
@@ -28,7 +29,7 @@ export default function RollForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const navigate = useNavigate();
+  const { handleBack } = useContext(RouteContext);
 
   const form = useForm<FormData>({
     resolver: zodResolver(rollSchema),
@@ -122,7 +123,7 @@ export default function RollForm({
 
         <Field>
           <Button
-            onClick={() => navigate(-1)}
+            onClick={() => handleBack("/")}
             variant="outline"
             type="button"
             className="w-full"

@@ -16,7 +16,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "./schema";
 import { z } from "zod";
-import { NavLink } from "react-router";
+import { useContext } from "react";
+import { RouteContext } from "@/contexts";
 
 type FormData = z.infer<typeof signupSchema>;
 
@@ -24,6 +25,8 @@ export default function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const { handleBack } = useContext(RouteContext);
+
   const form = useForm<FormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -162,12 +165,15 @@ export default function SignupForm({
             <img className="w-3.5 h-3.5" src={GoogleLogo} alt="google logo" />
             <span>Sign up with Google</span>
           </Button>
-          <NavLink to="/auth">
-            <Button variant="outline" type="button" className="w-full">
-              <ArrowLeft />
-              Go back
-            </Button>
-          </NavLink>
+          <Button
+            onClick={() => handleBack("/auth")}
+            variant="outline"
+            type="button"
+            className="w-full"
+          >
+            <ArrowLeft />
+            Go back
+          </Button>
         </Field>
       </FieldGroup>
     </form>
