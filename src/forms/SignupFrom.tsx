@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "./schema";
 import { z } from "zod";
+import { NavLink } from "react-router";
 
 type FormData = z.infer<typeof signupSchema>;
 
@@ -34,7 +35,9 @@ export default function SignupForm({
     },
   });
 
-  const handleSignup = (formData) => {
+  const formErrors = form.formState.errors;
+
+  const handleSignup = (formData: FormData) => {
     console.log(formData);
   };
 
@@ -85,15 +88,11 @@ export default function SignupForm({
             />
           </Field>
 
-          {form.formState.errors.firstName ? (
-            <FieldDescription>
-              {form.formState.errors.firstName.message}
-            </FieldDescription>
+          {formErrors.firstName ? (
+            <FieldDescription>{formErrors.firstName.message}</FieldDescription>
           ) : (
-            form.formState.errors.lastName && (
-              <FieldDescription>
-                {form.formState.errors.lastName.message}
-              </FieldDescription>
+            formErrors.lastName && (
+              <FieldDescription>{formErrors.lastName.message}</FieldDescription>
             )
           )}
         </FieldGroup>
@@ -101,6 +100,7 @@ export default function SignupForm({
           <FieldLabel htmlFor="gender">Gender</FieldLabel>
           <ToggleGroup
             type="single"
+            variant="outline"
             onValueChange={(value) => {
               if (!value) return;
               form.setValue("gender", value as "male" | "female", {
@@ -119,10 +119,8 @@ export default function SignupForm({
             </ToggleGroupItem>
           </ToggleGroup>
 
-          {form.formState.errors.gender && (
-            <FieldDescription>
-              {form.formState.errors.gender.message}
-            </FieldDescription>
+          {formErrors.gender && (
+            <FieldDescription>{formErrors.gender.message}</FieldDescription>
           )}
         </Field>
         <Field>
@@ -133,10 +131,8 @@ export default function SignupForm({
             type="password"
             className="bg-background"
           />
-          {form.formState.errors.password && (
-            <FieldDescription>
-              {form.formState.errors.password.message}
-            </FieldDescription>
+          {formErrors.password && (
+            <FieldDescription>{formErrors.password.message}</FieldDescription>
           )}
         </Field>
         <Field>
@@ -147,9 +143,9 @@ export default function SignupForm({
             type="password"
             className="bg-background"
           />
-          {form.formState.errors.confirmPassword && (
+          {formErrors.confirmPassword && (
             <FieldDescription>
-              {form.formState.errors.confirmPassword.message}
+              {formErrors.confirmPassword.message}
             </FieldDescription>
           )}
         </Field>
@@ -166,10 +162,12 @@ export default function SignupForm({
             <img className="w-3.5 h-3.5" src={GoogleLogo} alt="google logo" />
             <span>Sign up with Google</span>
           </Button>
-          <Button variant="outline" type="button" className="w-full">
-            <ArrowLeft />
-            Go back
-          </Button>
+          <NavLink to="/auth">
+            <Button variant="outline" type="button" className="w-full">
+              <ArrowLeft />
+              Go back
+            </Button>
+          </NavLink>
         </Field>
       </FieldGroup>
     </form>

@@ -10,22 +10,30 @@ import SignupForm from "@/forms/SignupFrom";
 import LoginForm from "@/forms/LoginForm";
 import OtpForm from "@/forms/OtpForm";
 import RollForm from "@/forms/RollForm";
+import ResetPasswordForm from "./forms/ResetPasswordForm";
+import RouteProvider from "./providers/RouteProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route index element={<LandingPage />} />
-        <Route path="/dashboard" element={<App />}>
-          <Route index element={<Dashboard />} />
-        </Route>
-        <Route path="/auth" element={<Auth />}>
-          <Route index element={<RollForm />} />
-          <Route path="/auth/signup" element={<SignupForm />} />
-          <Route path="/auth/login" element={<LoginForm />} />
-          <Route path="/auth/verify" element={<OtpForm />} />
-        </Route>
-      </Routes>
+      <RouteProvider>
+        <Routes>
+          <Route index element={<LandingPage />} />
+          <Route path="/dashboard" element={<App />}>
+            <Route index element={<Dashboard />} />
+          </Route>
+          <Route path="/auth" element={<Auth />}>
+            <Route index element={<RollForm />} />
+            <Route path="/auth/signup" element={<SignupForm />} />
+            <Route path="/auth/login" element={<LoginForm />} />
+            <Route path="/auth/verify" element={<OtpForm />} />
+            <Route
+              path="/auth/reset-password"
+              element={<ResetPasswordForm />}
+            />
+          </Route>
+        </Routes>
+      </RouteProvider>
     </BrowserRouter>
   </StrictMode>,
 );

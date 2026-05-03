@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import GoogleLogo from "@/assets/google.svg";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -9,37 +8,39 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowLeft } from "lucide-react";
 import Logo from "@/assets/logo.svg";
-import { loginSchema } from "./schema";
+import { resetPasswordSchema } from "./schema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { RouteContext } from "@/contexts";
 
-type FormData = z.infer<typeof loginSchema>;
+type FormData = z.infer<typeof resetPasswordSchema>;
 
-export default function LoginForm({
+export default function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const { handleBack } = useContext(RouteContext);
+
   const form = useForm<FormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      roll: "2408020",
       password: "",
+      confirmPassword: "",
     },
   });
   const formErrors = form.formState.errors;
 
-  const handleLogin = (formData: FormData) => {
+  const handleResetPassword = (formData: FormData) => {
     console.log(formData);
   };
 
   return (
     <form
-      onSubmit={form.handleSubmit(handleLogin)}
+      onSubmit={form.handleSubmit(handleResetPassword)}
       noValidate
       className={cn("flex flex-col gap-6", className)}
       {...props}
@@ -56,15 +57,11 @@ export default function LoginForm({
               Mechowarts
             </span>
           </div>
-          <Avatar className="h-12 w-12 rounded-full">
-            {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-            <AvatarFallback className="rounded-full">TH</AvatarFallback>
-          </Avatar>
 
-          <h1 className="text-2xl font-bold">Welcome back, Hasan!</h1>
+          <h1 className="text-2xl font-bold">Reset Password</h1>
 
           <p className="text-sm text-muted-foreground">
-            Good to see you again. Let’s get you inside.
+            Please reset your password
           </p>
         </div>
 
@@ -80,35 +77,35 @@ export default function LoginForm({
             <FieldDescription>{formErrors.password.message}</FieldDescription>
           )}
         </Field>
+        <Field>
+          <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+          <Input
+            id="confirmPassword"
+            type="password"
+            {...form.register("confirmPassword")}
+            className="bg-background"
+          />
+          {formErrors.confirmPassword && (
+            <FieldDescription>
+              {formErrors.confirmPassword.message}
+            </FieldDescription>
+          )}
+        </Field>
 
         <Field>
           <Button type="submit" className="w-full">
-            Log In
+            Save
           </Button>
-          <FieldDescription className="text-center px-6">
-            Forgot your password?{" "}
-            <NavLink
-              to="/auth/verify"
-              state={{ from: "/auth/login" }}
-              replace
-              className="underline"
-            >
-              Reset it
-            </NavLink>
-          </FieldDescription>
         </Field>
 
         <FieldSeparator>Or</FieldSeparator>
         <Field>
           <Button
+            onClick={() => handleBack("/auth")}
             variant="outline"
             type="button"
-            className="flex justify-center"
+            className="w-full"
           >
-            <img className="w-3.5 h-3.5" src={GoogleLogo} alt="google logo" />
-            <span>Login with Google</span>
-          </Button>
-          <Button variant="outline" type="button" className="w-full">
             <ArrowLeft />
             Go back
           </Button>

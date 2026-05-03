@@ -18,21 +18,28 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { rollSchema } from "./schema";
+import { z } from "zod";
+
+type FormData = z.infer<typeof rollSchema>;
 
 export default function RollForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const form = useForm({
+  const navigate = useNavigate();
+
+  const form = useForm<FormData>({
     resolver: zodResolver(rollSchema),
     defaultValues: {
       roll: "",
     },
   });
 
-  const handleRollSubmit = (formData) => {
+  const formErrors = form.formState.errors;
+
+  const handleRollSubmit = (formData: FormData) => {
     console.log(formData.roll);
   };
 
@@ -100,10 +107,8 @@ export default function RollForm({
             )}
           />
 
-          {form.formState.errors.roll && (
-            <FieldDescription>
-              {form.formState.errors.roll.message}
-            </FieldDescription>
+          {formErrors.roll && (
+            <FieldDescription>{formErrors.roll.message}</FieldDescription>
           )}
         </Field>
 
@@ -115,14 +120,16 @@ export default function RollForm({
 
         <FieldSeparator>or</FieldSeparator>
 
-        {/* Back */}
         <Field>
-          <NavLink to="/">
-            <Button variant="outline" type="button" className="w-full">
-              <ArrowLeft />
-              Go back
-            </Button>
-          </NavLink>
+          <Button
+            onClick={() => navigate(-1)}
+            variant="outline"
+            type="button"
+            className="w-full"
+          >
+            <ArrowLeft />
+            Go back
+          </Button>
         </Field>
       </FieldGroup>
     </form>

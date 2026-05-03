@@ -7,18 +7,50 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
 import Logo from "@/assets/logo.svg";
+import { z } from "zod";
+import { otpSchema } from "./schema";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { useContext } from "react";
+import { RouteContext } from "@/contexts";
+
+type FormData = z.infer<typeof otpSchema>;
 
 export default function OtpForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const { handleBack } = useContext(RouteContext);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(otpSchema),
+    defaultValues: {
+      otp: "",
+    },
+  });
+
+  const formErrors = form.formState.errors;
+
+  const handleOtpSubmit = (formData: FormData) => {
+    console.log(formData.otp);
+  };
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      noValidate
+      onSubmit={form.handleSubmit(handleOtpSubmit)}
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
       <FieldGroup>
-        {/* Header */}
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="flex justify-center items-center gap-2 mb-2">
             <img
@@ -41,21 +73,37 @@ export default function OtpForm({
           </span>
         </div>
 
-        {/* OTP Inputs */}
         <Field>
           <FieldLabel>Enter OTP</FieldLabel>
 
-          <div className="flex justify-center gap-2">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Input
-                key={i}
-                maxLength={1}
-                inputMode="numeric"
-                className="h-12 w-10 text-center text-lg font-mono"
-              />
-            ))}
-          </div>
+          <Controller
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <div className="flex justify-center">
+                <InputOTP
+                  maxLength={6}
+                  id="digits-only"
+                  pattern={REGEXP_ONLY_DIGITS}
+                  value={field.value}
+                  onChange={field.onChange}
+                >
+                  <InputOTPGroup>
+                    <InputOTPSlot className="digit-slot" index={0} />
+                    <InputOTPSlot className="digit-slot" index={1} />
+                    <InputOTPSlot className="digit-slot" index={2} />
+                    <InputOTPSlot className="digit-slot" index={3} />
+                    <InputOTPSlot className="digit-slot" index={4} />
+                    <InputOTPSlot className="digit-slot" index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
+            )}
+          />
 
+          {formErrors.otp && (
+            <FieldDescription>{formErrors.otp.message}</FieldDescription>
+          )}
           <FieldDescription className="text-center">
             Didn’t get the code?{" "}
             <button type="button" className="underline">
@@ -64,7 +112,6 @@ export default function OtpForm({
           </FieldDescription>
         </Field>
 
-        {/* Submit */}
         <Field>
           <Button type="submit" className="w-full">
             Verify & Continue
@@ -73,9 +120,13 @@ export default function OtpForm({
 
         <FieldSeparator>or</FieldSeparator>
 
-        {/* Back */}
         <Field>
-          <Button variant="outline" type="button" className="w-full">
+          <Button
+            onClick={() => handleBack("/auth")}
+            variant="outline"
+            type="button"
+            className="w-full"
+          >
             <ArrowLeft />
             Go back
           </Button>
