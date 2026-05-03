@@ -6,6 +6,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import LandingPage from "@/pages/LandingPage";
 import Auth from "@/pages/Auth";
+import SignupForm from "@/forms/SignupFrom";
+import LoginForm from "@/forms/LoginForm";
+import OtpForm from "@/forms/OtpForm";
+import RollForm from "@/forms/RollForm";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -15,8 +19,11 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/dashboard" element={<App />}>
           <Route index element={<Dashboard />} />
         </Route>
-        <Route path="/auth">
-          <Route index element={<Auth />} />
+        <Route path="/auth" element={<Auth />}>
+          <Route index element={<RollForm />} />
+          <Route path="/auth/signup" element={<SignupForm />} />
+          <Route path="/auth/login" element={<LoginForm />} />
+          <Route path="/auth/verify" element={<OtpForm />} />
         </Route>
       </Routes>
     </BrowserRouter>
