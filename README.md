@@ -1,3 +1,3 @@
 ## To-Do
 
--[ ] Implement Login/Register Pages
+- [ ] Implement Login/Register Pages
