@@ -10,8 +10,9 @@ import SignupForm from "@/forms/SignupFrom";
 import LoginForm from "@/forms/LoginForm";
 import OtpForm from "@/forms/OtpForm";
 import RollForm from "@/forms/RollForm";
-import ResetPasswordForm from "./forms/ResetPasswordForm";
-import RouteProvider from "./providers/RouteProvider";
+import ResetPasswordForm from "@/forms/ResetPasswordForm";
+import RouteProvider from "@/providers/RouteProvider";
+import { NotFound } from "@/pages/NotFound";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -32,6 +33,7 @@ createRoot(document.getElementById("root")!).render(
               element={<ResetPasswordForm />}
             />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </RouteProvider>
     </BrowserRouter>
