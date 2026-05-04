@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
 export default function Footer() {
   const DiscordIcon = () => (
@@ -23,13 +24,15 @@ export default function Footer() {
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Join the update channel
           </p>
-          <Button
-            variant="outline"
-            className="rounded-full  hover:bg-[#5865F2] hover:text-background gap-2 px-8"
-          >
-            <DiscordIcon />
-            Discord Server
-          </Button>
+          <NavLink to="https://discord.gg/RTSYg9SbFZ" target="_blank">
+            <Button
+              variant="outline"
+              className="rounded-full  hover:bg-[#5865F2] hover:text-background gap-2 px-8"
+            >
+              <DiscordIcon />
+              Discord Server
+            </Button>
+          </NavLink>
         </div>
 
         <div className="text-xs font-mono opacity-50 uppercase tracking-wider">
