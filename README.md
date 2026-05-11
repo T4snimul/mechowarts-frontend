@@ -16,7 +16,7 @@
 - [ ] Materials Page
 - [ ] LaTeX based report cover generator
 
-## To-Do
+## Long-Term
 
 - [ ] Login/Signup with Google
 - [ ] Posting Notes
