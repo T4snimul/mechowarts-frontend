@@ -8,7 +8,7 @@ export default function RouteProvider({ children }: { children: ReactNode }) {
 
   const handleBack = (defaultPage: string) => {
     const from = location.state?.from;
-    console.log(from);
+    console.log("redirected from", from);
 
     if (from) {
       navigate(from, { replace: true });

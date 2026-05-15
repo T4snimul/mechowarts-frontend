@@ -23,19 +23,16 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <RouteProvider>
           <Routes>
-            <Route index element={<LandingPage />} />
-            <Route path="/dashboard" element={<App />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/dashboard/*" element={<App />}>
               <Route index element={<Dashboard />} />
             </Route>
-            <Route path="/auth" element={<Auth />}>
+            <Route path="/auth/*" element={<Auth />}>
               <Route index element={<RollForm />} />
-              <Route path="/auth/signup" element={<SignupForm />} />
-              <Route path="/auth/login" element={<LoginForm />} />
-              <Route path="/auth/verify" element={<OtpForm />} />
-              <Route
-                path="/auth/reset-password"
-                element={<ResetPasswordForm />}
-              />
+              <Route path="signup" element={<SignupForm />} />
+              <Route path="login" element={<LoginForm />} />
+              <Route path="verify" element={<OtpForm />} />
+              <Route path="reset-password" element={<ResetPasswordForm />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

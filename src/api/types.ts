@@ -9,4 +9,14 @@ export interface User {
 export interface CheckRollResponse {
   exists: boolean;
   user?: User;
+  roll: string;
 }
+
+export type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+};

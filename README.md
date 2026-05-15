@@ -1,6 +1,9 @@
 ## Ongoing
 
-- [ ] Authentication with tansktack query and axios
+- [x] /auth page
+- [ ] /auth/login page
+- [ ] /auth/signup page
+- [ ] /auth/verify page
 
 ## UI Fixes
 

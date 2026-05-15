@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import GoogleLogo from "@/assets/google.svg";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -9,15 +8,18 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { ArrowLeft } from "lucide-react";
 import Logo from "@/assets/logo.svg";
 import { loginSchema } from "./schema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useRoute } from "@/hooks/useRoute";
+import { useQueryClient } from "@tanstack/react-query";
+import type { User } from "@/api/types";
+import { useEffect } from "react";
 
 type FormData = z.infer<typeof loginSchema>;
 
@@ -26,11 +28,22 @@ export default function LoginForm({
   ...props
 }: React.ComponentProps<"form">) {
   const { handleBack } = useRoute();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const roll = searchParams.get("roll");
+  const queryClient = useQueryClient();
+  const cachedUser = queryClient.getQueryData<User>(["user", roll]);
+
+  useEffect(() => {
+    if (!cachedUser) {
+      navigate("/auth", { replace: true });
+    }
+  }, [cachedUser, navigate]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      roll: "2408020",
+      roll: roll || "",
       password: "",
     },
   });
@@ -39,6 +52,10 @@ export default function LoginForm({
   const handleLogin = (formData: FormData) => {
     console.log(formData);
   };
+
+  if (!cachedUser) {
+    return null;
+  }
 
   return (
     <form
@@ -60,11 +77,18 @@ export default function LoginForm({
             </span>
           </div>
           <Avatar className="h-12 w-12 rounded-full">
-            {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-            <AvatarFallback className="rounded-full">TH</AvatarFallback>
+            {cachedUser.nameAvatar && (
+              <img
+                className="rounded-full"
+                src={cachedUser.nameAvatar}
+                alt={cachedUser.name}
+              />
+            )}
           </Avatar>
 
-          <h1 className="text-2xl font-bold">Welcome back, Hasan!</h1>
+          <h1 className="text-2xl font-bold">
+            Welcome back, {cachedUser.name.trim().split(" ").pop()}!
+          </h1>
 
           <p className="text-sm text-muted-foreground">
             Good to see you again. Let’s get you inside.
@@ -91,8 +115,8 @@ export default function LoginForm({
           <FieldDescription className="text-center px-6">
             Forgot your password?{" "}
             <NavLink
-              to="/auth/verify"
-              state={{ from: "/auth/login" }}
+              to={`/auth/verify?roll=${roll ?? ""}`}
+              state={{ from: `/auth/login?roll=${roll ?? ""}` }}
               replace
               className="underline"
             >
@@ -103,14 +127,6 @@ export default function LoginForm({
 
         <FieldSeparator>Or</FieldSeparator>
         <Field>
-          <Button
-            variant="outline"
-            type="button"
-            className="flex justify-center"
-          >
-            <img className="w-3.5 h-3.5" src={GoogleLogo} alt="google logo" />
-            <span>Login with Google</span>
-          </Button>
           <Button
             onClick={() => handleBack("/auth")}
             variant="outline"

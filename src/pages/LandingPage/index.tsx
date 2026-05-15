@@ -7,11 +7,8 @@ export default function LandingPage() {
   return (
     <>
       <Helmet>
-        <title>Mechowarts - Mechatronics & Robotics Projects</title>
-        <meta
-          name="description"
-          content="Mechowarts is a portfolio of mechatronics engineering projects, robotics builds, and web development experiments by Tanim."
-        />
+        <title>Mechowarts - Student Dashboard</title>
+        <meta name="description" content="Mechowarts is the " />
       </Helmet>
       <div className="selection:bg-primary selection:text-background min-h-screen bg-linear-to-b from-background to-muted/40 flex flex-col">
         <Header />

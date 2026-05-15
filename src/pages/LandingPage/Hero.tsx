@@ -16,9 +16,9 @@ export default function Hero() {
         </p>
 
         <div className="flex gap-3 justify-center">
-          <Button size="lg">
-            <NavLink to="/auth">Get Started</NavLink>
-          </Button>
+          <NavLink to="/auth">
+            <Button size="lg">Get Started</Button>
+          </NavLink>
           <Button size="lg" variant="outline">
             Learn More
           </Button>

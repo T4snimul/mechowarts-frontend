@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import GoogleLogo from "@/assets/google.svg";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -17,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "./schema";
 import { z } from "zod";
 import { useRoute } from "@/hooks/useRoute";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 type FormData = z.infer<typeof signupSchema>;
 
@@ -25,6 +26,15 @@ export default function SignupForm({
   ...props
 }: React.ComponentProps<"form">) {
   const { handleBack } = useRoute();
+  const [searchParams] = useSearchParams();
+  const roll = searchParams.get("roll");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!roll) {
+      navigate("/auth", { replace: true });
+    }
+  }, [roll, navigate]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(signupSchema),
@@ -66,7 +76,7 @@ export default function SignupForm({
           <p className="text-sm/5.5 text-balance text-muted-foreground">
             Your account will be associated with:{" "}
             <span className="font-code font-bold text-xs bg-accent p-1 rounded text-primary">
-              2408020@student.ruet.ac.bd
+              {roll}@student.ruet.ac.bd
             </span>
           </p>
         </div>
@@ -156,14 +166,6 @@ export default function SignupForm({
         </Field>
         <FieldSeparator>Or</FieldSeparator>
         <Field>
-          <Button
-            variant="outline"
-            type="button"
-            className="flex justify-center"
-          >
-            <img className="w-3.5 h-3.5" src={GoogleLogo} alt="google logo" />
-            <span>Sign up with Google</span>
-          </Button>
           <Button
             onClick={() => handleBack("/auth")}
             variant="outline"

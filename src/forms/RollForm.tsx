@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import GoogleLogo from "@/assets/google.svg";
 import {
   Field,
   FieldDescription,
@@ -21,8 +22,10 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { rollSchema } from "./schema";
 import { z } from "zod";
 import { useRoute } from "@/hooks/useRoute";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { checkRoll } from "@/api/auth";
+import { useNavigate } from "react-router-dom";
+import type { ApiError } from "@/api/types";
 
 type FormData = z.infer<typeof rollSchema>;
 
@@ -31,6 +34,8 @@ export default function RollForm({
   ...props
 }: React.ComponentProps<"form">) {
   const { handleBack } = useRoute();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const form = useForm<FormData>({
     resolver: zodResolver(rollSchema),
@@ -43,14 +48,30 @@ export default function RollForm({
     mutationFn: (roll: string) => checkRoll(roll),
     onSuccess: (data) => {
       if (data.exists && data.user) {
-        console.log("User found:", data.user);
-        console.log("Navigating... /login");
+        queryClient.setQueryData(["user", data.user.roll], data.user);
+        navigate(`/auth/login?roll=${data.user.roll}`, {
+          state: {
+            from: "/auth",
+          },
+        });
       } else {
-        console.log("User not found, navigating... /signup");
+        navigate(`/auth/signup?roll=${data.roll}`, {
+          state: {
+            from: "/auth",
+          },
+        });
       }
     },
-    onError: (error) => {
-      form.setError("roll", { message: error.message });
+    onError: (error: unknown) => {
+      const err = error as ApiError;
+
+      const message =
+        err.response?.data?.message || err.message || "Something went wrong";
+
+      form.setError("roll", {
+        type: "server",
+        message,
+      });
     },
   });
 
@@ -142,6 +163,14 @@ export default function RollForm({
         <FieldSeparator>or</FieldSeparator>
 
         <Field>
+          <Button
+            variant="outline"
+            type="button"
+            className="flex justify-center"
+          >
+            <img className="w-3.5 h-3.5" src={GoogleLogo} alt="google logo" />
+            <span>Continue with Google</span>
+          </Button>
           <Button
             onClick={() => handleBack("/")}
             variant="outline"

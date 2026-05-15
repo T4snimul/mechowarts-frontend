@@ -15,9 +15,9 @@ export default function Header() {
           <span className="font-semibold tracking-tight">Mechowarts</span>
         </div>
 
-        <Button variant="outline">
-          <NavLink to="/auth">Login</NavLink>
-        </Button>
+        <NavLink to="/auth">
+          <Button variant="outline">Login</Button>
+        </NavLink>
       </div>
     </header>
   );
