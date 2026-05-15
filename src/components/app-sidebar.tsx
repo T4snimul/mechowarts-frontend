@@ -15,7 +15,6 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-
 import Logo from "@/assets/logo.svg";
 import {
   Calculator,
@@ -66,16 +65,20 @@ const data = {
       ],
     },
     {
-      title: "Friends",
+      title: "Family",
       url: "#",
       icon: Users,
       items: [
         {
-          title: "My Friends",
+          title: "23 Series",
           url: "#",
         },
         {
-          title: "Add Friends",
+          title: "22 Series",
+          url: "#",
+        },
+        {
+          title: "21 Series",
           url: "#",
         },
       ],
