@@ -13,29 +13,34 @@ import RollForm from "@/forms/RollForm";
 import ResetPasswordForm from "@/forms/ResetPasswordForm";
 import RouteProvider from "@/providers/RouteProvider";
 import { NotFound } from "@/pages/NotFound";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <RouteProvider>
-        <Routes>
-          <Route index element={<LandingPage />} />
-          <Route path="/dashboard" element={<App />}>
-            <Route index element={<Dashboard />} />
-          </Route>
-          <Route path="/auth" element={<Auth />}>
-            <Route index element={<RollForm />} />
-            <Route path="/auth/signup" element={<SignupForm />} />
-            <Route path="/auth/login" element={<LoginForm />} />
-            <Route path="/auth/verify" element={<OtpForm />} />
-            <Route
-              path="/auth/reset-password"
-              element={<ResetPasswordForm />}
-            />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </RouteProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <RouteProvider>
+          <Routes>
+            <Route index element={<LandingPage />} />
+            <Route path="/dashboard" element={<App />}>
+              <Route index element={<Dashboard />} />
+            </Route>
+            <Route path="/auth" element={<Auth />}>
+              <Route index element={<RollForm />} />
+              <Route path="/auth/signup" element={<SignupForm />} />
+              <Route path="/auth/login" element={<LoginForm />} />
+              <Route path="/auth/verify" element={<OtpForm />} />
+              <Route
+                path="/auth/reset-password"
+                element={<ResetPasswordForm />}
+              />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </RouteProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   </StrictMode>,
 );

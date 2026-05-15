@@ -21,6 +21,8 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { rollSchema } from "./schema";
 import { z } from "zod";
 import { useRoute } from "@/hooks/useRoute";
+import { useMutation } from "@tanstack/react-query";
+import { checkRoll } from "@/api/auth";
 
 type FormData = z.infer<typeof rollSchema>;
 
@@ -37,10 +39,25 @@ export default function RollForm({
     },
   });
 
+  const checkRollMutation = useMutation({
+    mutationFn: (roll: string) => checkRoll(roll),
+    onSuccess: (data) => {
+      if (data.exists && data.user) {
+        console.log("User found:", data.user);
+        console.log("Navigating... /login");
+      } else {
+        console.log("User not found, navigating... /signup");
+      }
+    },
+    onError: (error) => {
+      form.setError("roll", { message: error.message });
+    },
+  });
+
   const formErrors = form.formState.errors;
 
   const handleRollSubmit = (formData: FormData) => {
-    console.log(formData.roll);
+    checkRollMutation.mutate(formData.roll);
   };
 
   return (
@@ -113,8 +130,12 @@ export default function RollForm({
         </Field>
 
         <Field>
-          <Button type="submit" className="w-full">
-            Continue
+          <Button
+            disabled={checkRollMutation.isPending}
+            type="submit"
+            className="w-full"
+          >
+            {checkRollMutation.isPending ? "Verifying..." : "Continue"}
           </Button>
         </Field>
 
