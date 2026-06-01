@@ -30,14 +30,9 @@ import {
   Users,
 } from "lucide-react";
 import { TooltipProvider } from "./ui/tooltip";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
-// This is sample data.
 const data = {
-  user: {
-    name: "Tasnimul Hasan",
-    email: "2408020@student.ruet.ac.bd",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Home",
@@ -177,6 +172,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: currentUser } = useCurrentUser();
+
   return (
     <TooltipProvider>
       <Sidebar collapsible="icon" {...props}>
@@ -201,9 +198,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <NavMain items={data.resources} label="Resources" />
           <NavMain items={data.tools} label="Tools" />
         </SidebarContent>
-        <SidebarFooter>
-          <NavUser user={data.user} />
-        </SidebarFooter>
+        {currentUser && (
+          <SidebarFooter>
+            <NavUser
+              user={{
+                name: currentUser.name,
+                email: currentUser.email,
+                avatar: currentUser.nameAvatar,
+              }}
+            />
+          </SidebarFooter>
+        )}
         <SidebarRail />
       </Sidebar>
     </TooltipProvider>

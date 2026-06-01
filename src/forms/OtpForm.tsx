@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useRoute } from "@/hooks/useRoute";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 type FormData = z.infer<typeof otpSchema>;
 
@@ -28,6 +30,16 @@ export default function OtpForm({
   ...props
 }: React.ComponentProps<"form">) {
   const { handleBack } = useRoute();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const roll = searchParams.get("roll");
+  const email = roll ? `${roll}@student.ruet.ac.bd` : "";
+
+  useEffect(() => {
+    if (!roll) {
+      navigate("/auth", { replace: true });
+    }
+  }, [roll, navigate]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(otpSchema),
@@ -39,8 +51,13 @@ export default function OtpForm({
   const formErrors = form.formState.errors;
 
   const handleOtpSubmit = (formData: FormData) => {
+    if (!roll) return;
     console.log(formData.otp);
   };
+
+  if (!roll) {
+    return null;
+  }
 
   return (
     <form
@@ -68,7 +85,7 @@ export default function OtpForm({
           </p>
 
           <span className="font-code text-xs bg-accent px-2 py-1 rounded text-primary">
-            2408020@student.ruet.ac.bd
+            {email}
           </span>
         </div>
 
