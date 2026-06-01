@@ -14,6 +14,8 @@ import ResetPasswordForm from "@/forms/ResetPasswordForm";
 import RouteProvider from "@/providers/RouteProvider";
 import { NotFound } from "@/pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RequireAuth } from "@/routes/RequireAuth";
+import { GuestOnly } from "@/routes/GuestOnly";
 
 const queryClient = new QueryClient();
 
@@ -24,15 +26,19 @@ createRoot(document.getElementById("root")!).render(
         <RouteProvider>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard/*" element={<App />}>
-              <Route index element={<Dashboard />} />
+            <Route element={<RequireAuth />}>
+              <Route path="/dashboard/*" element={<App />}>
+                <Route index element={<Dashboard />} />
+              </Route>
             </Route>
-            <Route path="/auth/*" element={<Auth />}>
-              <Route index element={<RollForm />} />
-              <Route path="signup" element={<SignupForm />} />
-              <Route path="login" element={<LoginForm />} />
-              <Route path="verify" element={<OtpForm />} />
-              <Route path="reset-password" element={<ResetPasswordForm />} />
+            <Route element={<GuestOnly />}>
+              <Route path="/auth/*" element={<Auth />}>
+                <Route index element={<RollForm />} />
+                <Route path="signup" element={<SignupForm />} />
+                <Route path="login" element={<LoginForm />} />
+                <Route path="verify" element={<OtpForm />} />
+                <Route path="reset-password" element={<ResetPasswordForm />} />
+              </Route>
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

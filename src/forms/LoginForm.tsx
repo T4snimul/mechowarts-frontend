@@ -15,11 +15,19 @@ import { loginSchema } from "./schema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  NavLink,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useRoute } from "@/hooks/useRoute";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { User } from "@/api/types";
 import { useEffect } from "react";
+import { login } from "@/api/auth";
+import axios from "axios";
+import { setAuthToken } from "@/lib/auth-token";
 
 type FormData = z.infer<typeof loginSchema>;
 
@@ -29,16 +37,18 @@ export default function LoginForm({
 }: React.ComponentProps<"form">) {
   const { handleBack } = useRoute();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const roll = searchParams.get("roll");
   const queryClient = useQueryClient();
   const cachedUser = queryClient.getQueryData<User>(["user", roll]);
+  const redirectTo = location.state?.from ?? "/dashboard";
 
   useEffect(() => {
     if (!cachedUser) {
-      navigate("/auth", { replace: true });
+      navigate("/auth", { replace: true, state: { from: redirectTo } });
     }
-  }, [cachedUser, navigate]);
+  }, [cachedUser, navigate, redirectTo]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(loginSchema),
@@ -47,10 +57,34 @@ export default function LoginForm({
       password: "",
     },
   });
+
   const formErrors = form.formState.errors;
 
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: ({ user, token }) => {
+      setAuthToken(token);
+      queryClient.setQueryData(["user", user.roll], user);
+      queryClient.setQueryData(["auth", "session"], { user });
+
+      navigate(redirectTo, {
+        replace: true,
+      });
+    },
+    onError: (error: unknown) => {
+      const message = axios.isAxiosError<{ message?: string }>(error)
+        ? error.response?.data?.message || error.message
+        : "Something went wrong";
+
+      form.setError("password", {
+        type: "server",
+        message,
+      });
+    },
+  });
+
   const handleLogin = (formData: FormData) => {
-    console.log(formData);
+    loginMutation.mutate(formData);
   };
 
   if (!cachedUser) {
@@ -109,8 +143,12 @@ export default function LoginForm({
         </Field>
 
         <Field>
-          <Button type="submit" className="w-full">
-            Log In
+          <Button
+            disabled={loginMutation.isPending}
+            type="submit"
+            className="w-full"
+          >
+            {loginMutation.isPending ? "Logging in..." : "Log In"}
           </Button>
           <FieldDescription className="text-center px-6">
             Forgot your password?{" "}

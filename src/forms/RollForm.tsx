@@ -24,7 +24,7 @@ import { z } from "zod";
 import { useRoute } from "@/hooks/useRoute";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { checkRoll } from "@/api/auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { ApiError } from "@/api/types";
 
 type FormData = z.infer<typeof rollSchema>;
@@ -35,7 +35,9 @@ export default function RollForm({
 }: React.ComponentProps<"form">) {
   const { handleBack } = useRoute();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
+  const redirectTo = location.state?.from ?? "/dashboard";
 
   const form = useForm<FormData>({
     resolver: zodResolver(rollSchema),
@@ -44,6 +46,8 @@ export default function RollForm({
     },
   });
 
+  const formErrors = form.formState.errors;
+
   const checkRollMutation = useMutation({
     mutationFn: (roll: string) => checkRoll(roll),
     onSuccess: (data) => {
@@ -51,13 +55,13 @@ export default function RollForm({
         queryClient.setQueryData(["user", data.user.roll], data.user);
         navigate(`/auth/login?roll=${data.user.roll}`, {
           state: {
-            from: "/auth",
+            from: redirectTo,
           },
         });
       } else {
         navigate(`/auth/signup?roll=${data.roll}`, {
           state: {
-            from: "/auth",
+            from: redirectTo,
           },
         });
       }
@@ -74,8 +78,6 @@ export default function RollForm({
       });
     },
   });
-
-  const formErrors = form.formState.errors;
 
   const handleRollSubmit = (formData: FormData) => {
     checkRollMutation.mutate(formData.roll);

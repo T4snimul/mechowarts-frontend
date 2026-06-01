@@ -12,6 +12,16 @@ export interface CheckRollResponse {
   roll: string;
 }
 
+export type LoginPayload = {
+  roll: string;
+  password: string;
+};
+
+export interface LoginResponse {
+  user: User;
+  token: string;
+}
+
 export type ApiError = {
   response?: {
     data?: {
