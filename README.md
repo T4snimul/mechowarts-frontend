@@ -1,13 +1,14 @@
 ## Ongoing
 
 - [x] /auth page
-- [ ] /auth/login page
-- [ ] /auth/signup page
+- [x] /auth/login page
+- [x] /auth/signup page
 - [ ] /auth/verify page
 
 ## UI Fixes
 
 - [x] Change Landing Page buttons to links
+- [ ] Individual Components for each pages
 
 ## Next
 

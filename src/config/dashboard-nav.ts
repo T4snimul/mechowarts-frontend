@@ -7,7 +7,7 @@ import {
   HomeIcon,
   LibraryBig,
   Map,
-  MessageCircle,
+  MessageSquare,
   Notebook,
   Users,
   type LucideIcon,
@@ -94,7 +94,7 @@ export const dashboardNav = {
     {
       title: "Chat",
       url: "/dashboard/chat",
-      icon: MessageCircle,
+      icon: MessageSquare,
       description:
         "Join conversations with classmates, groups, and academic circles.",
     },
