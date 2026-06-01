@@ -16,160 +16,10 @@ import {
 } from "@/components/ui/sidebar";
 
 import Logo from "@/assets/logo.svg";
-import {
-  Calculator,
-  Calendar,
-  Clock,
-  File,
-  FlaskConical,
-  HomeIcon,
-  LibraryBig,
-  Map,
-  MessageCircle,
-  Notebook,
-  Users,
-} from "lucide-react";
-import { TooltipProvider } from "./ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-
-const data = {
-  navMain: [
-    {
-      title: "Home",
-      url: "#",
-      icon: HomeIcon,
-      isActive: true,
-    },
-    {
-      title: "Schedule",
-      url: "#",
-      icon: Calendar,
-      items: [
-        {
-          title: "This Week",
-          url: "#",
-        },
-        {
-          title: "Academics",
-          url: "#",
-        },
-        {
-          title: "Events",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Family",
-      url: "#",
-      icon: Users,
-      items: [
-        {
-          title: "23 Series",
-          url: "#",
-        },
-        {
-          title: "22 Series",
-          url: "#",
-        },
-        {
-          title: "21 Series",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Chat",
-      url: "#",
-      icon: MessageCircle,
-    },
-  ],
-  resources: [
-    {
-      title: "Notes",
-      url: "#",
-      icon: Notebook,
-    },
-    {
-      title: "Theories",
-      url: "#",
-      icon: LibraryBig,
-      items: [
-        {
-          title: "CSE 2187: Software Engineering",
-          url: "#",
-        },
-        {
-          title: "EEE 2187: Electronics",
-          url: "#",
-        },
-        {
-          title: "ME 2155: Engineering Mechanics",
-          url: "#",
-        },
-        {
-          title:
-            "MATH 2127: Fourier Series, Laplace Transform and Partial Differential Equation",
-          url: "#",
-        },
-        {
-          title: "HUM 2127: Engineering Economics & Accounting",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Sessionals",
-      url: "#",
-      icon: FlaskConical,
-      items: [
-        {
-          title: "CSE 2187: Software Engineering",
-          url: "#",
-        },
-        {
-          title: "EEE 2187: Electronics",
-          url: "#",
-        },
-        {
-          title: "ME 2155: Engineering Mechanics",
-          url: "#",
-        },
-        {
-          title:
-            "MATH 2127: Fourier Series, Laplace Transform and Partial Differential Equation",
-          url: "#",
-        },
-        {
-          title: "HUM 2127: Engineering Economics & Accounting",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  tools: [
-    {
-      title: "Grade Calculator",
-      url: "#",
-      icon: Calculator,
-    },
-    {
-      title: "Report Cover Generator",
-      url: "#",
-      icon: File,
-    },
-    {
-      title: "Pomodoro Timer",
-      url: "#",
-      icon: Clock,
-    },
-    {
-      title: "Alumni Map",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
+import { dashboardNav } from "@/config/dashboard-nav";
+import { Link } from "react-router-dom";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: currentUser } = useCurrentUser();
@@ -181,22 +31,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
-                <a href="#">
+                <Link to="/dashboard">
                   <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground">
                     <img src={Logo} alt="Mechowarts" />
                   </div>
                   <div className="flex flex-col gap-0.5 leading-none">
                     <span className="font-medium text-sm">Mechowarts</span>
                   </div>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={data.navMain} label="" />
-          <NavMain items={data.resources} label="Resources" />
-          <NavMain items={data.tools} label="Tools" />
+          <NavMain items={dashboardNav.main} label="" />
+          <NavMain items={dashboardNav.resources} label="Resources" />
+          <NavMain items={dashboardNav.tools} label="Tools" />
         </SidebarContent>
         {currentUser && (
           <SidebarFooter>

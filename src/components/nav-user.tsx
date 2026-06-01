@@ -22,7 +22,6 @@ import {
   SparklesIcon,
   CheckmarkBadgeIcon,
   CreditCardIcon,
-  NotificationIcon,
   LogoutIcon,
 } from "@hugeicons/core-free-icons";
 import { useNavigate } from "react-router-dom";
@@ -104,10 +103,6 @@ export function NavUser({
               <DropdownMenuItem>
                 <HugeiconsIcon icon={CreditCardIcon} strokeWidth={2} />
                 Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <HugeiconsIcon icon={NotificationIcon} strokeWidth={2} />
-                Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

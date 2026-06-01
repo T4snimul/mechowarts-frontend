@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import {
   Collapsible,
@@ -11,29 +11,28 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import type { DashboardNavItem } from "@/config/dashboard-nav";
+import { NavLink, useLocation } from "react-router-dom";
 
 export function NavMain({
   items,
   label,
 }: {
   label: string;
-  items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
-  }[];
+  items: DashboardNavItem[];
 }) {
+  const { pathname } = useLocation();
+
+  const isActive = (url: string) =>
+    pathname === url || (url !== "/dashboard" && pathname.startsWith(`${url}/`));
+
   return (
     <SidebarGroup>
       {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
@@ -42,27 +41,38 @@ export function NavMain({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={isActive(item.url)}
             className="group/collapsible"
           >
             <SidebarMenuItem>
               {(item?.items?.length ?? 0) > 0 ? (
                 <>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    isActive={isActive(item.url)}
+                    asChild
+                  >
+                    <NavLink to={item.url}>
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
+                    </NavLink>
+                  </SidebarMenuButton>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuAction aria-label={`Toggle ${item.title}`}>
+                      <ChevronRight className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuAction>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {item?.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={isActive(subItem.url)}
+                          >
+                            <NavLink to={subItem.url}>
                               <span>{subItem.title}</span>
-                            </a>
+                            </NavLink>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
@@ -70,9 +80,15 @@ export function NavMain({
                   </CollapsibleContent>
                 </>
               ) : (
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={isActive(item.url)}
+                  asChild
+                >
+                  <NavLink to={item.url}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </NavLink>
                 </SidebarMenuButton>
               )}
             </SidebarMenuItem>

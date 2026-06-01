@@ -4,6 +4,7 @@ import "@/index.css";
 import App from "@/App";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
+import { PlaceholderPage } from "@/pages/Dashboard/PlaceholderPage";
 import LandingPage from "@/pages/LandingPage";
 import Auth from "@/pages/Auth";
 import SignupForm from "@/forms/SignupForm";
@@ -17,8 +18,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RequireAuth } from "@/routes/RequireAuth";
 import { GuestOnly } from "@/routes/GuestOnly";
 import { HelmetProvider } from "react-helmet-async";
+import { dashboardRoutes } from "@/config/dashboard-nav";
 
 const queryClient = new QueryClient();
+const mockDashboardRoutes = dashboardRoutes.filter(
+  (route) => route.url !== "/dashboard",
+);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -31,6 +36,19 @@ createRoot(document.getElementById("root")!).render(
               <Route element={<RequireAuth />}>
                 <Route path="/dashboard/*" element={<App />}>
                   <Route index element={<Dashboard />} />
+                  {mockDashboardRoutes.map((route) => (
+                    <Route
+                      key={route.url}
+                      path={route.url.replace("/dashboard/", "")}
+                      element={
+                        <PlaceholderPage
+                          title={route.title}
+                          description={route.description}
+                          links={route.items}
+                        />
+                      }
+                    />
+                  ))}
                 </Route>
               </Route>
               <Route element={<GuestOnly />}>
