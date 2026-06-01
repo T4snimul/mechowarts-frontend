@@ -1,8 +1,9 @@
 import api from "@/lib/axios";
 import type {
+  AuthResponse,
   CheckRollResponse,
   LoginPayload,
-  LoginResponse,
+  SignupPayload,
   User,
 } from "@/api/types";
 
@@ -11,8 +12,13 @@ export const checkRoll = async (roll: string): Promise<CheckRollResponse> => {
   return response.data;
 };
 
-export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
-  const response = await api.post<LoginResponse>("/auth/login", payload);
+export const signup = async (payload: SignupPayload): Promise<AuthResponse> => {
+  const response = await api.post<AuthResponse>("/auth/register", payload);
+  return response.data;
+};
+
+export const login = async (payload: LoginPayload): Promise<AuthResponse> => {
+  const response = await api.post<AuthResponse>("/auth/login", payload);
   return response.data;
 };
 

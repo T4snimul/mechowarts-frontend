@@ -13,12 +13,19 @@ export interface CheckRollResponse {
   roll: string;
 }
 
+export type SignupPayload = {
+  name: string;
+  roll: string;
+  gender: "male" | "female";
+  password: string;
+};
+
 export type LoginPayload = {
   roll: string;
   password: string;
 };
 
-export interface LoginResponse {
+export interface AuthResponse {
   user: User;
   token: string;
 }

@@ -16,8 +16,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "./schema";
 import { z } from "zod";
 import { useRoute } from "@/hooks/useRoute";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { signup } from "@/api/auth";
+import { setAuthToken } from "@/lib/auth-token";
+import axios from "axios";
 
 type FormData = z.infer<typeof signupSchema>;
 
@@ -28,7 +32,10 @@ export default function SignupForm({
   const { handleBack } = useRoute();
   const [searchParams] = useSearchParams();
   const roll = searchParams.get("roll");
+  const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const redirectTo = location.state?.from ?? "/dashboard";
 
   useEffect(() => {
     if (!roll) {
@@ -49,8 +56,38 @@ export default function SignupForm({
 
   const formErrors = form.formState.errors;
 
+  const signupMutation = useMutation({
+    mutationFn: signup,
+    onSuccess: ({ user, token }) => {
+      setAuthToken(token);
+      queryClient.setQueryData(["user", user.roll], user);
+      queryClient.setQueryData(["auth", "session"], { user });
+
+      navigate(redirectTo, {
+        replace: true,
+      });
+    },
+    onError: (error: unknown) => {
+      const message = axios.isAxiosError<{ message?: string }>(error)
+        ? error.response?.data?.message || error.message
+        : "Something went wrong";
+
+      form.setError("password", {
+        type: "server",
+        message,
+      });
+    },
+  });
+
   const handleSignup = (formData: FormData) => {
-    console.log(formData);
+    const { firstName, lastName, gender, password } = formData;
+    const signupPayload = {
+      name: firstName + " " + lastName,
+      roll,
+      gender,
+      password,
+    };
+    signupMutation.mutate(signupPayload);
   };
 
   return (
