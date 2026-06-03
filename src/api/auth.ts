@@ -4,16 +4,29 @@ import type {
   CheckRollResponse,
   LoginPayload,
   SignupPayload,
+  SignupResponse,
   User,
+  VerifyResponse,
 } from "@/api/types";
 
 export const checkRoll = async (roll: string): Promise<CheckRollResponse> => {
   const response = await api.get<CheckRollResponse>(`/users/${roll}`);
+
   return response.data;
 };
 
-export const signup = async (payload: SignupPayload): Promise<AuthResponse> => {
-  const response = await api.post<AuthResponse>("/auth/register", payload);
+export const signup = async (
+  payload: SignupPayload,
+): Promise<SignupResponse> => {
+  const response = await api.post<SignupResponse>("/auth/register", payload);
+  return response.data;
+};
+
+export const verifyEmail = async (payload: { email: string; otp: string }) => {
+  const response = await api.post<VerifyResponse>(
+    "/auth/verify-email",
+    payload,
+  );
   return response.data;
 };
 

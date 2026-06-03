@@ -22,6 +22,9 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useRoute } from "@/hooks/useRoute";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { verifyEmail } from "@/api/auth";
+import axios from "axios";
 
 type FormData = z.infer<typeof otpSchema>;
 
@@ -32,14 +35,15 @@ export default function OtpForm({
   const { handleBack } = useRoute();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const roll = searchParams.get("roll");
-  const email = roll ? `${roll}@student.ruet.ac.bd` : "";
+  const type = searchParams.get("type");
+  const email = searchParams.get("email");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!roll) {
+    if (!email || !type) {
       navigate("/auth", { replace: true });
     }
-  }, [roll, navigate]);
+  }, [email, type, navigate]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(otpSchema),
@@ -50,14 +54,36 @@ export default function OtpForm({
 
   const formErrors = form.formState.errors;
 
-  const handleOtpSubmit = (formData: FormData) => {
-    if (!roll) return;
-    console.log(formData.otp);
-  };
+  const verifyEmailMutation = useMutation({
+    mutationFn: verifyEmail,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user", data.user.roll], data.user);
+      navigate(`/auth/login?roll=${data.user.roll}`);
+    },
+    onError: (error: unknown) => {
+      const message = axios.isAxiosError<{
+        message?: string;
+      }>(error)
+        ? error.response?.data?.message || error.message
+        : "Something went wrong";
 
-  if (!roll) {
-    return null;
-  }
+      form.setError("otp", {
+        type: "server",
+        message,
+      });
+    },
+  });
+
+  const handleOtpSubmit = (formData: FormData) => {
+    if (!email || !type) return;
+
+    if (type === "verify") {
+      verifyEmailMutation.mutate({
+        email,
+        otp: formData.otp,
+      });
+    }
+  };
 
   return (
     <form
@@ -78,7 +104,9 @@ export default function OtpForm({
               Mechowarts
             </span>
           </div>
-          <h1 className="text-2xl font-bold">Verify your identity</h1>
+          <h1 className="text-2xl font-bold">
+            {type === "verify" ? "Verify your email" : "Reset your password"}
+          </h1>
 
           <p className="text-sm text-muted-foreground">
             We’ve sent a 6-digit code to

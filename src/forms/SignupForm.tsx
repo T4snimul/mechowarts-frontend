@@ -16,11 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "./schema";
 import { z } from "zod";
 import { useRoute } from "@/hooks/useRoute";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signup } from "@/api/auth";
-import { setAuthToken } from "@/lib/auth-token";
 import axios from "axios";
 
 type FormData = z.infer<typeof signupSchema>;
@@ -32,16 +31,15 @@ export default function SignupForm({
   const { handleBack } = useRoute();
   const [searchParams] = useSearchParams();
   const roll = searchParams.get("roll");
-  const location = useLocation();
+  const rollValue = roll?.trim() ?? "";
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const redirectTo = location.state?.from ?? "/dashboard";
 
   useEffect(() => {
-    if (!roll) {
+    if (!rollValue) {
       navigate("/auth", { replace: true });
     }
-  }, [roll, navigate]);
+  }, [rollValue, navigate]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(signupSchema),
@@ -58,14 +56,14 @@ export default function SignupForm({
 
   const signupMutation = useMutation({
     mutationFn: signup,
-    onSuccess: ({ user, token }) => {
-      setAuthToken(token);
-      queryClient.setQueryData(["user", user.roll], user);
-      queryClient.setQueryData(["auth", "session"], { user });
-
-      navigate(redirectTo, {
-        replace: true,
-      });
+    onSuccess: ({ user }) => {
+      queryClient.setQueryData(["user", user.email], user);
+      navigate(
+        `/auth/verify?type=verify&email=${encodeURIComponent(user.email)}`,
+        {
+          replace: true,
+        },
+      );
     },
     onError: (error: unknown) => {
       const message = axios.isAxiosError<{ message?: string }>(error)
@@ -80,10 +78,18 @@ export default function SignupForm({
   });
 
   const handleSignup = (formData: FormData) => {
+    if (!rollValue) {
+      form.setError("root", {
+        type: "validate",
+        message: "Missing roll number. Please start the sign up flow again.",
+      });
+      return;
+    }
+
     const { firstName, lastName, gender, password } = formData;
     const signupPayload = {
       name: firstName + " " + lastName,
-      roll,
+      roll: rollValue,
       gender,
       password,
     };
@@ -199,7 +205,16 @@ export default function SignupForm({
           )}
         </Field>
         <Field>
-          <Button type="submit">Create Account</Button>
+          {formErrors.root && (
+            <FieldDescription>{formErrors.root.message}</FieldDescription>
+          )}
+        </Field>
+        <Field>
+          <Button type="submit" disabled={signupMutation.isPending}>
+            {signupMutation.isPending
+              ? "Creating Account..."
+              : "Create Account"}
+          </Button>
         </Field>
         <FieldSeparator>Or</FieldSeparator>
         <Field>

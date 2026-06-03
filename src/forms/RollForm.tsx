@@ -52,12 +52,24 @@ export default function RollForm({
     mutationFn: (roll: string) => checkRoll(roll),
     onSuccess: (data) => {
       if (data.exists && data.user) {
-        queryClient.setQueryData(["user", data.user.roll], data.user);
-        navigate(`/auth/login?roll=${data.user.roll}`, {
-          state: {
-            from: redirectTo,
-          },
-        });
+        if (!data.user.isVerified && data.verificationEmailSent) {
+          queryClient.setQueryData(["user", data.user.email], data.user);
+          navigate(
+            `/auth/verify?type=verify&email=${encodeURIComponent(data.user.email)}`,
+            {
+              state: {
+                from: redirectTo,
+              },
+            },
+          );
+        } else {
+          queryClient.setQueryData(["user", data.user.roll], data.user);
+          navigate(`/auth/login?roll=${data.user.roll}`, {
+            state: {
+              from: redirectTo,
+            },
+          });
+        }
       } else {
         navigate(`/auth/signup?roll=${data.roll}`, {
           state: {
