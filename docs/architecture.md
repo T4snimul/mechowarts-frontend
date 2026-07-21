@@ -172,53 +172,221 @@ Feature-specific components belong inside their respective feature folders.
 
 ## features/
 
-Contains complete application features.
+Features contain business logic and everything related to a specific domain of the application.
 
-Example:
+Each feature is self-contained and owns its own components, hooks, services, types, and validation schemas.
 
-features/auth
+Example structure:
 
-features/profile
+features/
 
-features/chat
+    auth/
+        components/
+        hooks/
+        services/
+        schemas/
+        types/
+        utils/
 
-features/projects
+    profile/
+        ...
 
-Each feature owns its own:
+    chat/
+        ...
 
-- components
-- hooks
-- services
-- schemas
-- types
+    projects/
+        ...
 
+---
+
+### Responsibilities
+
+A feature may contain:
+
+- UI specific to that feature
+- Business logic
+- Custom hooks
+- Validation schemas
+- Types
+- API service wrappers
+- Utility functions used only within the feature
+
+---
+
+### Rules
+
+- Keep features independent whenever possible.
+- Import reusable UI from `components/`.
+- Do not import code from one feature into another unless absolutely necessary.
+- Shared logic should be extracted into `lib/`, `components/`, or `hooks/`.
+- Pages should compose feature components instead of implementing feature logic directly.
+
+---
+
+### Examples
+
+Correct:
+
+features/auth/components/LoginForm.tsx
+
+features/profile/components/ProfileCard.tsx
+
+features/chat/components/ChatWindow.tsx
+
+Incorrect:
+
+components/LoginForm.tsx
+
+components/ProfileCard.tsx
+
+components/ChatWindow.tsx
 ---
 
 ## lib/
 
-Application utilities.
+The `lib` directory contains application-wide utilities that are not tied to any specific feature.
+
+Everything inside `lib` should be reusable across the entire application.
+
+Example structure:
+
+lib/
+
+    api/
+    auth/
+    constants/
+    utils/
+    validations/
+
+---
+
+### api/
+
+Shared API utilities.
 
 Examples:
 
-api client
+- apiClient
+- axios instance
+- fetch wrapper
+- request helpers
 
-auth
+This is infrastructure, not business logic.
 
-constants
+---
 
-helpers
+### auth/
 
-validators
+Authentication utilities shared across the application.
+
+Examples:
+
+- session helpers
+- auth configuration
+- permission helpers
+
+---
+
+### constants/
+
+Application-wide constants.
+
+Examples:
+
+- routes
+- roles
+- navigation
+- regex
+- configuration values
+
+Avoid magic strings throughout the project.
+
+---
+
+### utils/
+
+Generic helper functions.
+
+Examples:
+
+- formatDate()
+- formatCurrency()
+- cn()
+- debounce()
+- slugify()
+
+Utility functions should be pure whenever possible.
+
+---
+
+### validations/
+
+Validation schemas shared by multiple features.
+
+Feature-specific schemas should remain inside their respective feature.
+
+---
+
+### Rules
+
+- Code in `lib` must not depend on a specific feature.
+- Prefer pure functions.
+- Keep utilities small and focused.
+- Business logic does not belong in `lib`.
+- If a utility is only used by one feature, keep it inside that feature.
 
 ---
 
 ## services/
 
-Communication with backend.
+The `services` directory contains application-wide service implementations.
 
-Only services make HTTP requests.
+A service is responsible for communicating with external systems such as APIs, databases, storage providers, or third-party services.
 
-Components never call fetch() directly.
+Business rules belong in features.
+Infrastructure belongs in services.
+
+Example structure:
+
+services/
+
+    api/
+        auth.service.ts
+        users.service.ts
+        projects.service.ts
+
+    storage/
+        upload.service.ts
+
+    email/
+        email.service.ts
+
+---
+
+### Responsibilities
+
+Services may:
+
+- make HTTP requests
+- upload files
+- communicate with third-party APIs
+- encapsulate infrastructure concerns
+
+Services should not:
+
+- render UI
+- contain React code
+- contain page logic
+
+---
+
+### Rules
+
+- Components never call fetch() directly.
+- Components never call axios directly.
+- Features communicate with services.
+- Services should return typed data.
+- Keep services stateless whenever possible.
 
 ---
 
@@ -293,3 +461,26 @@ Component
 Routing → Features → Services → Backend
 
 Never skip layers.
+
+---
+
+# Application Modules
+
+The application is organized into independent modules.
+
+Each module owns its own business logic.
+
+Initial modules:
+
+- Authentication
+- User Profile
+- Projects
+- Skills
+- Experience
+- Education
+- Blog
+- Contact
+- Chat
+- Admin
+
+New modules should be added as independent features.
