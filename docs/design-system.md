@@ -1,151 +1,61 @@
 # Design System
 
-The design system defines the visual language of Mechowarts.
+Mechowarts uses a semantic design system built with Tailwind CSS v4 and shared theme tokens.
 
-Components should never invent their own styles.
+## Tokens
 
-Always reuse the design tokens.
+Design tokens are defined in `styles/theme.css`.
+Use token-based utilities instead of raw CSS values.
 
----
+### Color tokens
 
-# Border Radius
+- `bg-background`
+- `text-foreground`
+- `bg-card`
+- `text-muted-foreground`
+- `bg-primary`
+- `text-primary-foreground`
+- `border-border`
+- `ring-ring`
 
-- xs
-- sm
-- md
-- lg
-- xl
-- 2xl
-- full
+### Spacing
 
----
+- Use Tailwind spacing utilities.
+- Prefer values such as `p-4`, `gap-6`, `space-y-8`.
+- Avoid arbitrary pixel values when possible.
 
-# Spacing
+### Border radius
 
-Use Tailwind spacing scale only.
+- Use the token-based radius system.
+- Prefer utilities such as `rounded`, `rounded-lg`, and `rounded-full`.
 
-Never use arbitrary spacing values unless absolutely necessary.
+### Typography
 
-Examples:
+Maintain a consistent typographic hierarchy.
 
-p-4
+- Display: large hero text.
+- Heading: page titles.
+- Title: section headings.
+- Body: paragraph text.
+- Caption: secondary or supporting copy.
+- Label: form labels and UI labels.
 
-gap-6
+Avoid arbitrary font sizes and rely on semantic utility classes.
 
-space-y-8
+### Icons
 
----
+- Use `lucide-react` for standard icons.
+- Use custom icons in `components/icons/` only when necessary.
+- Keep icons simple and aligned with the brand style.
 
-# Typography
+### Animations
 
-Use semantic typography.
+- Prefer subtle transitions and motion.
+- Avoid excessive or distracting animation.
+- Use `tw-animate-css` for lightweight effects only when needed.
 
-Examples:
+## Component consistency
 
-Display
-
-Heading
-
-Title
-
-Body
-
-Caption
-
-Label
-
-Never style text using random font sizes.
-
----
-
-# Colors
-
-The application uses semantic color tokens.
-
-Never reference raw color values inside components.
-
-Always use semantic utilities.
-
-Examples:
-
-- bg-background
-- text-foreground
-- bg-card
-- text-muted-foreground
-- bg-primary
-- text-primary-foreground
-- border-border
-- ring-ring
-
-The actual color values are defined in `globals.css`.
-
-Components must never depend on specific hex values.
-
----
-
-# Icons
-
-Use lucide-react by default.
-
-Use custom SVG icons only when necessary.
-
----
-
-# Animations
-
-Prefer subtle animations.
-
-Avoid unnecessary motion.
-
-Use CSS transitions before animation libraries.
-
----
-
-# Component Philosophy
-
-Every component should look like it belongs to the same application.
-
-Consistency is more important than uniqueness.
-
----
-
-# Typography
-
-The application uses a semantic typography scale.
-
-Avoid styling text with arbitrary sizes.
-
-Instead, each piece of text should represent a role.
-
-## Display
-
-Used for hero sections and landing pages.
-
-## Heading
-
-Used for page titles.
-
-## Title
-
-Used for section titles.
-
-## Body
-
-Default paragraph text.
-
-## Caption
-
-Secondary information.
-
-## Label
-
-Forms, buttons, and UI controls.
-
----
-
-## Rules
-
-- Use Tailwind typography utilities.
-- Use font-medium only when emphasis is needed.
-- Maintain a consistent hierarchy throughout the application.
-- Avoid arbitrary font sizes unless required by the design.
+- Components should look like they belong to the same application.
+- Reuse shared tokens and style patterns across screens.
+- Avoid unique, one-off styling unless required by design.
