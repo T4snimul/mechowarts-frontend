@@ -16,8 +16,8 @@ function Hero() {
         </p>
 
         <div className="flex justify-center gap-3">
-          <Link href="/auth">
-            <Button size="lg">Get Started</Button>
+          <Link href="/dashboard">
+            <Button size="lg">Dashboard</Button>
           </Link>
           <Button size="lg" variant="outline">
             Learn More
